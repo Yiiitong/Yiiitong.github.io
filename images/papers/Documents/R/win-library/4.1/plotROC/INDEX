@@ -1,0 +1,28 @@
+GeomRoc                 Empirical Receiver Operating Characteristic
+                        Curve
+StatRoc                 Calculate the empirical Receiver Operating
+                        Characteristic curve
+StatRocci               Calculate confidence regions for the empirical
+                        ROC curve
+calc_auc                Calculate the Area under the ROC curve
+calculate_multi_roc     Calculate the Empirical ROC curves for multiple
+                        biomarkers
+calculate_roc           Calculate the Empirical ROC curve
+direct_label            Add direct labels to a ROC plot
+export_interactive_roc
+                        Generate svg code for an ROC curve object
+geom_rocci              Confidence regions for the ROC curve
+getD3                   Reads included JavaScript functions and returns
+                        them as a string for pasting into a webpage
+ggroc                   Plot an ROC curve
+melt_roc                Transform biomarkers stored as wide to long
+multi_ggroc             Plot multiple ROC curves
+plotROC                 Tools for plotting ROC Curves
+plot_interactive_roc    Generate a standalone html document displaying
+                        an interactive ROC curve
+plot_journal_roc        Plot an ROC curve for use in print
+roc_key                 Key for ROC geom
+shiny_plotROC           Start the plotROC Shiny app
+style_roc               Add guides and annotations to a ROC plot
+verify_d                Check that D is suitable for using as binary
+                        disease status

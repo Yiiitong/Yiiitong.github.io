@@ -1,0 +1,42 @@
+admissions              Gender bias among graduate school admissions to
+                        UC Berkeley.
+brca                    Breast Cancer Wisconsin Diagnostic Dataset from
+                        UCI Machine Learning Repository
+brexit_polls            Brexit Poll Data
+death_prob              2015 US Period Life Table
+divorce_margarine       Divorce rate and margarine consumption data
+ds_theme_set            dslabs theme set
+gapminder               Gapminder Data
+greenhouse_gases        Greenhouse gas concentrations over 2000 years
+heights                 Self-Reported Heights
+historic_co2            Atmospheric carbon dioxide concentration over
+                        800,000 years
+mnist_27                Useful example for illustrating machine
+                        learning algorithms based on MNIST data
+movielens               Movie ratings
+murders                 US gun murders by state for 2010
+na_example              Count data with some missing values
+nyc_regents_scores      NYC Regents exams scores 2010
+olive                   Italian olive
+outlier_example         Adult male heights in feet with outliers
+polls_2008              Poll data for popular vote in 2008 presidential
+                        election
+polls_us_election_2016
+                        Fivethirtyeight 2016 Poll Data
+read_mnist              Download and read the mnist dataset
+reported_heights        Self-reported Heights
+research_funding_rates
+                        Gender bias in research funding in the
+                        Netherlands
+rfalling_object         Simulate falling object data
+stars                   Physical Properties of Stars
+take_poll               Models results from taking a poll
+temp_carbon             Global temperature anomaly and carbon
+                        emissions, 1751-2018
+tissue_gene_expression
+                        Gene expression profiles for 189 biological
+                        samples taken from seven different tissue
+                        types.
+trump_tweets            Trump Tweets from2009 to 2017
+us_contagious_diseases
+                        Contagious disease data for US states

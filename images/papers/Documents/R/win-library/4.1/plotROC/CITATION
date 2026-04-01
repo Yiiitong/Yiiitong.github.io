@@ -1,0 +1,19 @@
+bibentry(bibtype = "Article",
+  title        = "{plotROC}: A Tool for Plotting ROC Curves",
+  author       = person(given = c("Michael", "C."),
+                        family = "Sachs",
+                        email = "sachsmc@gmail.com"),
+  journal      = "Journal of Statistical Software, Code Snippets",
+  year         = "2017",
+  volume       = "79",
+  number       = "2",
+  pages        = "1--19",
+  doi          = "10.18637/jss.v079.c02",
+
+  header       = "To cite plotROC in publications use:",
+  textVersion  =
+  paste("Michael C. Sachs (2017).",
+        "plotROC: A Tool for Plotting ROC Curves.",
+        "Journal of Statistical Software, Code Snippets, 79(2), 1-19.",
+        "doi:10.18637/jss.v079.c02")
+)

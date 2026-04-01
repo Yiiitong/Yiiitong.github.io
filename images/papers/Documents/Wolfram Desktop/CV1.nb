@@ -1,0 +1,569 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='WolframDesktop 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       161,          7]
+NotebookDataLength[     18925,        559]
+NotebookOptionsPosition[     15398,        499]
+NotebookOutlinePosition[     15834,        516]
+CellTagsIndexPosition[     15791,        513]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\[Copyright] Niklas Vest", "Text",ExpressionUUID->"3b71748f-259c-494d-869f-10b881eb1ada"],
+
+Cell["\<\
+The projection matrix mapping from 3D to 2D space (embedded in homogeneous \
+coordinates).\
+\>", "Text",ExpressionUUID->"0732f9a9-27cd-461b-aaa6-9bc73673f775"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pi0", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "1", ",", "0"}], "}"}]}], "}"}]}], 
+  ";"}], "\n", 
+ RowBox[{"MatrixForm", "[", "pi0", "]"}]}], "Input",ExpressionUUID->"cbc4b568-\
+a7ec-4538-8e2a-7bce3254b013"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"1", "0", "0", "0"},
+     {"0", "1", "0", "0"},
+     {"0", "0", "1", "0"}
+    },
+    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellLabel->
+  "Out[131]//MatrixForm= \
+",ExpressionUUID->"fec32c7d-17b1-4234-bc4a-9167fe60ccc2"]
+}, Open  ]],
+
+Cell["Constructs the intrinsic camera parameter matrix K.", "Text",ExpressionUUID->"2a193f31-a30a-4d1c-9093-45fc7ca3eb7b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"intrinsic", "[", 
+   RowBox[{
+   "fx_", ",", "fy_", ",", "sx_", ",", "sy_", ",", "ox_", ",", "oy_", ",", 
+    "\[Theta]_"}], "]"}], ":=", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"sx", "*", "fx"}], ",", "\[Theta]", ",", "ox"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", 
+      RowBox[{"sy", "*", "fy"}], ",", "oy"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "}"}]}]], "Input",
+ CellLabel->
+  "In[132]:= ",ExpressionUUID->"6661c6d1-2bef-400d-98e5-258f8d87670e"],
+
+Cell["\<\
+An intrinsic camera parameter matrix for a pinhole cam without skew.\
+\>", "Text",ExpressionUUID->"442977e0-ffae-4666-82cf-77e896b6c883"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pinholeK", "=", 
+   RowBox[{"intrinsic", "[", 
+    RowBox[{
+    "fx", ",", "fy", ",", "1", ",", "1", ",", "ox", ",", "oy", ",", "0"}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{"MatrixForm", "[", "k", "]"}]}], "Input",ExpressionUUID->"deb2f459-\
+710e-4233-a1a0-4aa27126dc76"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"fx", "0", "ox"},
+     {"0", "fy", "oy"},
+     {"0", "0", "1"}
+    },
+    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellLabel->
+  "Out[134]//MatrixForm= \
+",ExpressionUUID->"fc170b83-9364-4365-9838-fea54eece8b6"]
+}, Open  ]],
+
+Cell["\<\
+A transformation from the world coordinate frame to the camera coordinate \
+frame.\
+\>", "Text",ExpressionUUID->"81f314f0-aaea-4a39-bb02-3185172ddbf1"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", 
+    RowBox[{"r_", ",", "t_"}], "]"}], ":=", 
+   RowBox[{"Join", "[", "\n", 
+    RowBox[{
+     RowBox[{"Join", "[", 
+      RowBox[{"r", ",", 
+       RowBox[{"Transpose", "[", 
+        RowBox[{"{", 
+         RowBox[{"-", "t"}], "}"}], "]"}], ",", "2"}], "]"}], ",", " ", "\n", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "0", ",", "1"}], "}"}], "}"}]}], "\n", 
+    "]"}]}], "\n", 
+  RowBox[{"(*", " ", "example", " ", "*)"}]}], "\n", 
+ RowBox[{"MatrixForm", "[", 
+  RowBox[{"g", "[", 
+   RowBox[{
+    RowBox[{"IdentityMatrix", "[", "3", "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], "]"}], "]"}]}], "Input",Expre\
+ssionUUID->"ef18e869-375a-4e28-8055-f71dd065e52b"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"1", "0", "0", 
+      RowBox[{"-", "1"}]},
+     {"0", "1", "0", 
+      RowBox[{"-", "1"}]},
+     {"0", "0", "1", 
+      RowBox[{"-", "1"}]},
+     {"0", "0", "0", "1"}
+    },
+    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellLabel->
+  "Out[136]//MatrixForm= \
+",ExpressionUUID->"0e1b64b6-e221-4a57-af52-376e3755d021"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Embeds",
+ " ",
+ "the",
+ " ",
+ "vector",
+ " ",
+ StyleBox["v",
+  FontWeight->Bold],
+ StyleBox[" ",
+  FontWeight->Bold],
+ StyleBox["in",
+  FontWeight->Plain],
+ StyleBox[" ",
+  FontWeight->Plain],
+ StyleBox["homogeneous",
+  FontWeight->Plain],
+ StyleBox[" ",
+  FontWeight->Plain],
+ StyleBox["coordinates",
+  FontWeight->Plain]
+}], "Text",ExpressionUUID->"67fe2e07-5efe-4a68-b4a5-5d83bc8bf044"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"homog", "[", 
+   RowBox[{"v_", "/;", 
+    RowBox[{"VectorQ", "[", "v", "]"}]}], "]"}], ":=", 
+  RowBox[{"Join", "[", 
+   RowBox[{"v", ",", 
+    RowBox[{"{", "1", "}"}]}], "]"}]}], "\n", 
+ RowBox[{"MatrixForm", "[", 
+  RowBox[{"homog", "[", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], "]"}], "]"}]}], "Input",Expressi\
+onUUID->"d2588755-10c9-4976-930f-c10feb4c63d1"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", 
+   TagBox[GridBox[{
+      {"1"},
+      {"2"},
+      {"3"},
+      {"1"}
+     },
+     GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+     GridBoxSpacings->{"Columns" -> {
+         Offset[0.27999999999999997`], {
+          Offset[0.5599999999999999]}, 
+         Offset[0.27999999999999997`]}, "Rows" -> {
+         Offset[0.2], {
+          Offset[0.4]}, 
+         Offset[0.2]}}],
+    Column], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellLabel->
+  "Out[138]//MatrixForm= \
+",ExpressionUUID->"fbc5c72d-cf7b-4b0b-8314-9d4f27f1b298"]
+}, Open  ]],
+
+Cell["\<\
+A function that constructs a camera that is rotated and translated in the \
+world. Applying it to a point in 3D world coordinates will yield the 2D image \
+coordinates.\
+\>", "Text",ExpressionUUID->"d332da71-689f-43cf-8779-516aae9576ba"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"camera", "[", 
+   RowBox[{"c_", ",", 
+    RowBox[{"rot_", ":", 
+     RowBox[{"IdentityMatrix", "[", "3", "]"}]}]}], "]"}], ":=", 
+  RowBox[{
+   RowBox[{"pi0", " ", ".", " ", 
+    RowBox[{"g", "[", 
+     RowBox[{"rot", ",", "c"}], "]"}], " ", ".", " ", 
+    RowBox[{"homog", "[", "#", "]"}]}], "&"}]}]], "Input",
+ CellLabel->
+  "In[139]:= ",ExpressionUUID->"f8babd40-bf7c-471c-909f-80fb8f66882e"],
+
+Cell["\<\
+Scale 2D pixel coordinates by a constant \[Lambda] in homogeneous coordinates\
+\>", "Text",ExpressionUUID->"edc24818-f3e5-415d-bef5-b834a94dd4df"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"lambda", "[", 
+   RowBox[{"x_", ",", "\[Lambda]_"}], "]"}], ":=", 
+  RowBox[{"\[Lambda]", "*", 
+   RowBox[{"homog", "[", "x", "]"}]}]}]], "Input",
+ CellLabel->
+  "In[140]:= ",ExpressionUUID->"72be57e7-a151-4a60-9330-21b3d7114f78"],
+
+Cell["\<\
+Solves the linear system of equations that is the mapping from 3D world \
+coordinates to 2D pixel coordinates to find intrinsic camera parameters \
+(assuming no rotation of the cam).\
+\>", "Text",ExpressionUUID->"6ef833b4-3eb8-4d37-a3e1-0f976611de8e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"intrinsicParamsFromProjections", "[", 
+   RowBox[{"p1_", ",", "x1_", ",", "p2_", ",", "x2_", ",", "cam_"}], "]"}], ":=",
+   "\n", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"z", ",", "p1p", ",", "p2p"}], "}"}], ",", "\n", 
+    RowBox[{
+     RowBox[{"project", ":=", 
+      RowBox[{"camera", "[", "cam", "]"}]}], ";", "\n", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"p1p", ",", " ", "p2p"}], "}"}], ":=", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"project", "[", "p1", "]"}], ",", " ", 
+        RowBox[{"project", "[", "p2", "]"}]}], "}"}]}], ";", "\n", 
+     RowBox[{"Solve", "[", "\n", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"lambda", "[", 
+          RowBox[{"x1", ",", 
+           RowBox[{"p1p", "[", 
+            RowBox[{"[", 
+             RowBox[{"-", "1"}], "]"}], "]"}]}], "]"}], "==", 
+         RowBox[{"pinholeK", " ", ".", "p1p"}]}], " ", "&&", "\n", 
+        RowBox[{
+         RowBox[{"lambda", "[", 
+          RowBox[{"x2", ",", 
+           RowBox[{"p2p", "[", 
+            RowBox[{"[", 
+             RowBox[{"-", "1"}], "]"}], "]"}]}], "]"}], "==", 
+         RowBox[{"pinholeK", " ", ".", " ", "p2p"}]}]}], ",", "\n", 
+       RowBox[{"{", 
+        RowBox[{"fx", ",", "fy", ",", "ox", ",", "oy"}], "}"}]}], "\n", 
+      "]"}]}]}], "\n", "]"}]}]], "Input",ExpressionUUID->"45caa8f8-97ac-465d-\
+b6c9-66e3aee2aac9"],
+
+Cell["An example for finding the intrinsic camera parameters:", "Text",ExpressionUUID->"3500c6a5-342e-4ea1-b3e7-3d260eda778f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"intrinsicParamsFromProjections", "[", "\n", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"230", ",", "300"}], "}"}], ",", "\n", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"280", ",", "200"}], "}"}], ",", "\n", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "\n", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Module", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"z", ",", "p1p", ",", "p2p"}], "}"}], ",", "\n", 
+   RowBox[{
+    RowBox[{"project", ":=", 
+     RowBox[{"camera", "[", "cam", "]"}]}], ";", "\n", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"p1p", ",", " ", "p2p"}], "}"}], ":=", " ", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"project", "[", "p1", "]"}], ",", " ", 
+       RowBox[{"project", "[", "p2", "]"}]}], "}"}]}], ";", "\n", 
+    RowBox[{"Solve", "[", "\n", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"lambda", "[", 
+         RowBox[{"x1", ",", 
+          RowBox[{"p1p", "[", 
+           RowBox[{"[", 
+            RowBox[{"-", "1"}], "]"}], "]"}]}], "]"}], "==", 
+        RowBox[{"pinholeK", " ", ".", "p1p"}]}], " ", "&&", "\n", 
+       RowBox[{
+        RowBox[{"lambda", "[", 
+         RowBox[{"x2", ",", 
+          RowBox[{"p2p", "[", 
+           RowBox[{"[", 
+            RowBox[{"-", "1"}], "]"}], "]"}]}], "]"}], "==", 
+        RowBox[{"pinholeK", " ", ".", " ", "p2p"}]}]}], ",", "\n", 
+      RowBox[{"{", 
+       RowBox[{"fx", ",", "fy", ",", "ox", ",", "oy"}], "}"}]}], "\n", 
+     "]"}]}]}], "\n", "]"}]}], "Input",
+ CellChangeTimes->{{3.8362881893161974`*^9, 3.836288252151372*^9}, {
+  3.8362883630406895`*^9, 3.8362883634163027`*^9}},
+ CellLabel->"In[4]:=",ExpressionUUID->"36d0086c-1f51-4e41-b4b7-929a6c02b32a"],
+
+Cell[BoxData[
+ RowBox[{"intrinsicParamsFromProjections", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"230", ",", "300"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"280", ",", "200"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "]"}]], "Output",
+ CellChangeTimes->{3.836288365928389*^9},
+ CellLabel->"Out[4]=",ExpressionUUID->"4975e140-3e92-4710-b0a5-d81965766694"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ CellChangeTimes->{3.836288365993415*^9},
+ CellLabel->"Out[5]=",ExpressionUUID->"2ef59d7f-1cb1-403d-9707-f64d1ba8b7c7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"intrinsicParamsFromProjections", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"230", ",", "300"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"280", ",", "200"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.8362882849636545`*^9, 3.8362882972457376`*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"a60180bd-1270-4ca3-a8c4-69c6103776ef"],
+
+Cell[BoxData[
+ RowBox[{"intrinsicParamsFromProjections", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"230", ",", "300"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"280", ",", "200"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "]"}]], "Output",
+ CellChangeTimes->{3.8362883165589714`*^9},
+ CellLabel->"Out[3]=",ExpressionUUID->"8a13f8d8-59e7-43d9-b3c3-365f2b2770f4"]
+}, Open  ]],
+
+Cell["\<\
+An example where the intrinsic parameters are known and you want to find the \
+2D pixel coordinates:\
+\>", "Text",ExpressionUUID->"1409e04a-cf59-473d-bbf9-f355db77b8d3"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"intr1", "=", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"700", ",", "0", ",", "350"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "350", ",", "135"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "}"}]}], "\n", 
+ RowBox[{"x1", "=", 
+  RowBox[{"intr1", " ", ".", " ", 
+   RowBox[{
+    RowBox[{"camera", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}], ",", "0"}], "}"}], "]"}], "[", 
+    RowBox[{"{", 
+     RowBox[{"4", ",", 
+      RowBox[{"-", "1"}], ",", "7"}], "}"}], "]"}]}]}], "\n", 
+ RowBox[{"x1", "/", 
+  RowBox[{"x1", "[", 
+   RowBox[{"[", 
+    RowBox[{"-", "1"}], "]"}], "]"}]}]}], "Input",ExpressionUUID->"f3b6962f-\
+15f4-48e6-b689-cda84a6e46dc"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"700", ",", "0", ",", "350"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "350", ",", "135"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "}"}]], "Output",
+ CellLabel->
+  "Out[147]= ",ExpressionUUID->"88bd0f1e-f656-418a-99c8-241839363b9f"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"5950", ",", "945", ",", "7"}], "}"}]], "Output",
+ CellLabel->
+  "Out[148]= ",ExpressionUUID->"08b7750a-16fe-4578-a04e-2b3c816f1e47"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"850", ",", "135", ",", "1"}], "}"}]], "Output",
+ CellLabel->
+  "Out[149]= ",ExpressionUUID->"10a8e006-a28a-496c-9647-7426c6161681"]
+}, Open  ]]
+},
+WindowSize->{571.8, 524.4},
+WindowMargins->{{284.4, Automatic}, {Automatic, 40.199999999999996`}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (2021\:5e746\:670825\
+\:65e5)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"c388a895-9c70-4143-ad02-5ce17caad4e1"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[561, 20, 95, 0, 35, "Text",ExpressionUUID->"3b71748f-259c-494d-869f-10b881eb1ada"],
+Cell[659, 22, 169, 3, 58, "Text",ExpressionUUID->"0732f9a9-27cd-461b-aaa6-9bc73673f775"],
+Cell[CellGroupData[{
+Cell[853, 29, 458, 13, 62, "Input",ExpressionUUID->"cbc4b568-a7ec-4538-8e2a-7bce3254b013"],
+Cell[1314, 44, 627, 19, 77, "Output",ExpressionUUID->"fec32c7d-17b1-4234-bc4a-9167fe60ccc2"]
+}, Open  ]],
+Cell[1956, 66, 122, 0, 35, "Text",ExpressionUUID->"2a193f31-a30a-4d1c-9093-45fc7ca3eb7b"],
+Cell[2081, 68, 580, 17, 48, "Input",ExpressionUUID->"6661c6d1-2bef-400d-98e5-258f8d87670e"],
+Cell[2664, 87, 147, 2, 35, "Text",ExpressionUUID->"442977e0-ffae-4666-82cf-77e896b6c883"],
+Cell[CellGroupData[{
+Cell[2836, 93, 306, 8, 62, "Input",ExpressionUUID->"deb2f459-710e-4233-a1a0-4aa27126dc76"],
+Cell[3145, 103, 616, 19, 77, "Output",ExpressionUUID->"fc170b83-9364-4365-9838-fea54eece8b6"]
+}, Open  ]],
+Cell[3776, 125, 161, 3, 58, "Text",ExpressionUUID->"81f314f0-aaea-4a39-bb02-3185172ddbf1"],
+Cell[CellGroupData[{
+Cell[3962, 132, 785, 23, 171, "Input",ExpressionUUID->"ef18e869-375a-4e28-8055-f71dd065e52b"],
+Cell[4750, 157, 720, 23, 94, "Output",ExpressionUUID->"0e1b64b6-e221-4a57-af52-376e3755d021"]
+}, Open  ]],
+Cell[5485, 183, 407, 21, 35, "Text",ExpressionUUID->"67fe2e07-5efe-4a68-b4a5-5d83bc8bf044"],
+Cell[CellGroupData[{
+Cell[5917, 208, 421, 12, 78, "Input",ExpressionUUID->"d2588755-10c9-4976-930f-c10feb4c63d1"],
+Cell[6341, 222, 646, 22, 94, "Output",ExpressionUUID->"fbc5c72d-cf7b-4b0b-8314-9d4f27f1b298"]
+}, Open  ]],
+Cell[7002, 247, 247, 4, 81, "Text",ExpressionUUID->"d332da71-689f-43cf-8779-516aae9576ba"],
+Cell[7252, 253, 430, 12, 43, "Input",ExpressionUUID->"f8babd40-bf7c-471c-909f-80fb8f66882e"],
+Cell[7685, 267, 156, 2, 35, "Text",ExpressionUUID->"edc24818-f3e5-415d-bef5-b834a94dd4df"],
+Cell[7844, 271, 265, 7, 28, "Input",ExpressionUUID->"72be57e7-a151-4a60-9330-21b3d7114f78"],
+Cell[8112, 280, 261, 4, 81, "Text",ExpressionUUID->"6ef833b4-3eb8-4d37-a3e1-0f976611de8e"],
+Cell[8376, 286, 1436, 39, 233, "Input",ExpressionUUID->"45caa8f8-97ac-465d-b6c9-66e3aee2aac9"],
+Cell[9815, 327, 126, 0, 35, "Text",ExpressionUUID->"3500c6a5-342e-4ea1-b3e7-3d260eda778f"],
+Cell[CellGroupData[{
+Cell[9966, 331, 1839, 50, 309, "Input",ExpressionUUID->"36d0086c-1f51-4e41-b4b7-929a6c02b32a"],
+Cell[11808, 383, 540, 14, 52, "Output",ExpressionUUID->"4975e140-3e92-4710-b0a5-d81965766694"],
+Cell[12351, 399, 165, 3, 32, "Output",ExpressionUUID->"2ef59d7f-1cb1-403d-9707-f64d1ba8b7c7"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12553, 407, 567, 14, 48, InheritFromParent,ExpressionUUID->"a60180bd-1270-4ca3-a8c4-69c6103776ef"],
+Cell[13123, 423, 542, 14, 52, "Output",ExpressionUUID->"8a13f8d8-59e7-43d9-b3c3-365f2b2770f4"]
+}, Open  ]],
+Cell[13680, 440, 179, 3, 58, "Text",ExpressionUUID->"1409e04a-cf59-473d-bbf9-f355db77b8d3"],
+Cell[CellGroupData[{
+Cell[13884, 447, 794, 25, 67, "Input",ExpressionUUID->"f3b6962f-15f4-48e6-b689-cda84a6e46dc"],
+Cell[14681, 474, 352, 10, 32, "Output",ExpressionUUID->"88bd0f1e-f656-418a-99c8-241839363b9f"],
+Cell[15036, 486, 172, 4, 32, "Output",ExpressionUUID->"08b7750a-16fe-4578-a04e-2b3c816f1e47"],
+Cell[15211, 492, 171, 4, 32, "Output",ExpressionUUID->"10a8e006-a28a-496c-9647-7426c6161681"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
