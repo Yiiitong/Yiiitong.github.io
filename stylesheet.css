@@ -63,20 +63,36 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+:root {
+  --bg:          #fbfcfd;   /* page background */
+  --ink:         #1b2432;   /* headings, titles, strong emphasis */
+  --text:        #333d4a;   /* body copy */
+  --text-soft:   #5a6572;   /* authors, secondary text */
+  --muted:       #8b95a5;   /* venue full name, footer, fine print */
+  --brand:       #2b6cb0;   /* links, primary accent */
+  --brand-dark:  #1e4e82;   /* underlines, borders, hover on brand fills */
+  --brand-tint:  rgba(43, 108, 176, 0.30); /* soft brand hairline */
+  --accent:      #e08a3c;   /* warm interaction accent */
+  --border:      #e8ebf0;   /* hairlines */
+  --row-hover:   #f3f7fb;   /* publication row hover */
+  --award-bg:    #fdf1e0;   /* honor badge background */
+  --award-fg:    #b4691f;   /* honor badge text */
+}
+
 a {
-  color: #1772d0;
+  color: var(--brand);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:focus,
 a:hover {
-  color: #f09228;
+  color: var(--accent);
   text-decoration: none;
 }
 
 body {
-  background-color: #fcfcfc;
+  background-color: var(--bg);
 }
 
 body,
@@ -87,7 +103,7 @@ p,
 a {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 16px;
-  color: #333;
+  color: var(--text);
   line-height: 1.6;
 }
 
@@ -100,10 +116,12 @@ heading {
   padding-left: 2.5%;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 26px;
-  color: #222;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.3px;
   display: inline-block;
   padding-bottom: 6px;
-  border-bottom: 2px solid #1772d0;
+  border-bottom: 2px solid var(--brand);
 }
 
 subheading {
@@ -116,7 +134,7 @@ papertitle {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 17px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--ink);
   line-height: 1.4;
 }
 
@@ -124,8 +142,23 @@ name {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 36px;
   font-weight: 700;
-  color: #222;
+  color: var(--ink);
   letter-spacing: 0.5px;
+}
+
+.affiliation {
+  line-height: 1.9em;
+  color: var(--text-soft);
+  font-size: 15.5px;
+}
+
+.affiliation .role {
+  display: inline-block;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.2px;
+  margin-bottom: 2px;
 }
 
 .one {
@@ -179,13 +212,13 @@ span.highlight {
 }
 
 .paper-container tr:hover {
-  background-color: #f5f8fc;
+  background-color: var(--row-hover);
 }
 
 .paper-container tr td {
   padding-top: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
 }
 
 .paper-container tr:last-child td {
@@ -215,12 +248,16 @@ span.highlight {
 
 .paper-authors {
   font-style: normal;
-  color: #555;
+  color: var(--text-soft);
   font-size: 15px;
 }
 
+.paper-authors strong {
+  color: var(--ink);
+}
+
 .paper-venue {
-  color: #1a1a2e;
+  color: var(--ink);
   font-size: 15px;
   font-weight: 600;
   font-style: normal;
@@ -228,14 +265,19 @@ span.highlight {
   display: inline-block;
 }
 
+.paper-venue .venue-full {
+  color: var(--muted);
+  font-weight: 400;
+}
+
 .paper-badge {
   display: inline-block;
   font-style: normal;
   font-size: 13px;
   font-weight: 600;
-  color: #c0392b;
-  background-color: #fdecea;
-  padding: 1px 8px;
+  color: var(--award-fg);
+  background-color: var(--award-bg);
+  padding: 1px 9px;
   border-radius: 10px;
   letter-spacing: 0.2px;
 }
@@ -247,23 +289,24 @@ span.highlight {
 .paper-links a {
   display: inline-block;
   font-size: 13px;
-  color: #1772d0;
-  border: 1px solid #1772d0;
+  color: var(--brand);
+  border: 1px solid var(--brand-tint);
   border-radius: 12px;
   padding: 1px 10px;
   margin: 2px 2px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .paper-links a:hover {
-  background-color: #1772d0;
+  background-color: var(--brand);
+  border-color: var(--brand);
   color: #fff;
 }
 
 hr {
   border: none;
   height: 1px;
-  background: linear-gradient(to right, transparent, #ccc, transparent);
+  background: linear-gradient(to right, transparent, #d7dde5, transparent);
   margin: 12px 0;
 }
 
@@ -272,15 +315,15 @@ footer {
 }
 
 footer p {
-  color: #888;
+  color: var(--muted);
   font-size: 14px;
 }
 
 footer a {
-  color: #888;
+  color: var(--muted);
   font-size: 14px;
 }
 
 footer a:hover {
-  color: #f09228;
+  color: var(--accent);
 }
