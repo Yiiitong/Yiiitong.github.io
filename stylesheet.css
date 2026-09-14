@@ -64,6 +64,10 @@
 }
 
 :root {
+  /* declare a light-only page so Chrome's "Auto Dark Mode for Web Contents"
+     doesn't auto-invert the palette */
+  color-scheme: light;
+
   --bg:          #fbfcfd;   /* page background */
   --ink:         #1b2432;   /* headings, titles, strong emphasis */
   --text:        #333d4a;   /* body copy */
